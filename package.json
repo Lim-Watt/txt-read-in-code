@@ -1,77 +1,85 @@
-{
-  "name": "txt-read-in-code",
-  "publisher": "ElectronicElementsStudio",
-  "displayName": "TXT Read in Code",
-  "description": "Allows you to read TXT in a code environment.",
-  "version": "1.1.4",
-  "icon": "icon.png",
-  "engines": {
-    "vscode": "^1.86.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "repository": {
-	"type": "git",
-	"url": "https://github.com/Lim-Watt/txt-read-in-code"
-  },
-  "activationEvents": [
-    "onCommand"
-  ],
-  "main": "./extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "txt-read-in-code.init",
-        "title": "read.init"
-      },
-      {
-        "command": "txt-read-in-code.next",
-        "title": "read.next"
-      },
-      {
-        "command": "txt-read-in-code.last",
-        "title": "read.last"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "txt-read-in-code.next",
-        "key": "ctrl+Shift+Alt+right"
-      },
-      {
-        "command": "txt-read-in-code.last",
-        "key": "ctrl+Shift+Alt+left"
-      }
-    ],
-    "configuration": {
-      "title": "TXT Read in Code",
-      "properties": {
-        "txt-read-in-code.Sign": {
-          "type": "string",
-          "default": "/// ",
-          "description": "设置阅读标识符"
-        },
-        "txt-read-in-code.WordCount": {
-          "type": "number",
-          "default": 20,
-          "description": "设置最多显示字数"
-        }
-      }
-    }
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
-  },
-  "devDependencies": {
-    "@types/vscode": "^1.86.0",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "18.x",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
-    "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.9"
-  }
+	{
+	"name": "txt-read-in-code",
+	"publisher": "ElectronicElementsStudio",
+	"displayName": "TXT Read in Code",
+	"description": "Allows you to read TXT in a code environment.",
+	"version": "1.2.0",
+	"icon": "icon.png",
+	"engines": {
+		"vscode": "^1.86.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Lim-Watt/txt-read-in-code"
+	},
+	"activationEvents": [
+		"onCommand"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "txt-read-in-code.init",
+				"title": "read.init"
+			},
+			{
+				"command": "txt-read-in-code.next",
+				"title": "read.next"
+			},
+			{
+				"command": "txt-read-in-code.last",
+				"title": "read.last"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "txt-read-in-code.next",
+				"key": "ctrl+Alt+pagedown"
+			},
+			{
+				"command": "txt-read-in-code.last",
+				"key": "ctrl+Alt+pageup"
+			},
+			{
+				"command": "txt-read-in-code.next",
+				"key": "ctrl+Shift+Alt+right"
+			},
+			{
+				"command": "txt-read-in-code.last",
+				"key": "ctrl+Shift+Alt+left"
+			}
+		],
+		"configuration": {
+			"title": "TXT Read in Code",
+			"properties": {
+				"txt-read-in-code.Sign": {
+					"type": "string",
+					"default": "/// ",
+					"description": "设置阅读标识符"
+				},
+				"txt-read-in-code.WordCount": {
+					"type": "number",
+					"default": 20,
+					"description": "设置最多显示字数"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.86.0",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "18.x",
+		"eslint": "^8.56.0",
+		"typescript": "^5.3.3",
+		"@vscode/test-cli": "^0.0.4",
+		"@vscode/test-electron": "^2.3.9"
+	}
 }

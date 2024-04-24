@@ -4,7 +4,7 @@
 
 Not for work, let's goof off.
 
-![](https://image.baidu.com/search/down?url=https://tvax1.sinaimg.cn/large/008D5oyhly1hndslmi4lhg30hs0cv4qu.gif)
+![](https://cdn.ipfsscan.io/weibo/large/008D5oyhly1hndslmi4lhg30hs0cv4qu.gif)
 
 目录：
 1. [设置](#设置)
@@ -48,17 +48,17 @@ Not for work, let's goof off.
 
 调用插件 `read.init` 命令：
 
-![](https://image.baidu.com/search/down?url=https://tvax3.sinaimg.cn/large/008D5oyhly1hnveg1m0ogj30sg0lcabx.jpg)
+![](https://cdn.ipfsscan.io/weibo/large/008D5oyhly1hnveg1m0ogj30sg0lcabx.jpg)
 
 选取文件：
 
-![](https://image.baidu.com/search/down?url=https://tvax3.sinaimg.cn/large/008D5oyhly1hnvegis01cj30q30etwhz.jpg)
+![](https://cdn.ipfsscan.io/weibo/large/008D5oyhly1hnvegis01cj30q30etwhz.jpg)
 
 ### 第 三 步 开始阅读
 
-调用插件 `read.next` 命令或使用 `Ctrl + Shift + Alt + right` 快捷键，插件会自动读取下一句并放到代码中第一个阅读标识符的后面。
+调用插件 `read.next` 命令或使用 `Ctrl + Shift + Alt + right` 或 `Ctrl + Alt + pagedown` 快捷键，插件会自动读取下一句并放到代码中第一个阅读标识符的后面。
 
-调用插件 `read.last` 命令或使用 `Ctrl + Shift + Alt + left` 快捷键，插件会自动读取上一句并放到代码中第一个阅读标识符的后面。（请不要使用 `Ctrl + Z` 退回，那样会令程序困惑）
+调用插件 `read.last` 命令或使用 `Ctrl + Shift + Alt + left` 或 `Ctrl + Alt + pageup` 快捷键，插件会自动读取上一句并放到代码中第一个阅读标识符的后面。（请不要使用 `Ctrl + Z` 退回，那样会令程序困惑）
 
 ---
 

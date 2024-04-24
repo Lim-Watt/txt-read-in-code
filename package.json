@@ -3,7 +3,7 @@
 	"publisher": "ElectronicElementsStudio",
 	"displayName": "TXT Read in Code",
 	"description": "Allows you to read TXT in a code environment.",
-	"version": "2.0.0",
+	"version": "1.3.0",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"

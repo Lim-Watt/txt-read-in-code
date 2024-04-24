@@ -3,14 +3,13 @@ const fs = require('fs');
 
 function activate(context) {
 	/** 缓存根目录 */
-	const txtfolder = context.globalStorageUri.fsPath + '\\';
+	const txtfolder = context.globalStorageUri.fsPath + '/';
 	/** 已读 */
 	const txtfile1 = txtfolder + "txtfile1";
 	/** 在读 */
 	const txtfile2 = txtfolder + "txtfile2";
 	/** 未读 */
 	const txtfile3 = txtfolder + "txtfile3";
-	
 	// 保证父目录存在
 	!function ()
 	{
@@ -70,7 +69,7 @@ function activate(context) {
 		});
 	}
 	
-	function work_next()
+	async function work_next()
 	{
 		let editor = vscode.window.activeTextEditor;
 		if (!editor)
@@ -93,47 +92,48 @@ function activate(context) {
 		let te = 0;
 		let huan = "";
 		while (text[te] != '\n' && te <= wordcount) ++ te;
-		if (text[te] == '\n') ++ te;
-		else huan = '\n';
 		
 		let tex2 = text.substring(0, te);
+		
+		if (text[te] == '\n')
+		{
+			huan = '\n';
+			++ te;
+		}
 		
 		let tex3 = text.substring(te);
 		
 		fs.appendFileSync(txtfile1, fs.readFileSync(txtfile2, 'utf8'));
-		fs.writeFileSync(txtfile2, tex2, (err) => {});
+		fs.writeFileSync(txtfile2, tex2 + huan, (err) => {});
 		fs.writeFileSync(txtfile3, tex3, (err) => {});
 		
 		//let code = fs.readFileSync(codefile, 'utf8');
-		let code = editor.document.getText();
-		let c = code.indexOf(sign);
-		if (c == -1)
+		
+		if (editor.document.getText().indexOf(sign) == -1)
 		{
-			editor.edit(editBuilder => {
+			await editor.edit(editBuilder => {
 				const begin = new vscode.Position(0, 0);
 				editBuilder.insert(begin, sign + "\n");
 			});
-			code = sign + "\n" + code;
-			c = 0;
 		}
-		c += sign.length;
-		let ce = c;
-		while (ce < code.length && code[ce] != '\n') ++ ce;
-		if (ce < code.length) ++ ce;
 		
-		code = code.substring(0, c) + tex2 + huan + code.substring(ce);
-		
-		//fs.writeFile(codefile, code, (err) => {});
-		editor.edit(editBuilder => {
-			const begin = new vscode.Position(0, 0);
-			const end = new vscode.Position(vscode.window.activeTextEditor.document.lineCount + 1, 0);
-			const all = new vscode.Range(begin, end);
-			editBuilder.delete(all);
-			editBuilder.insert(begin, code);
-		});
+		for (let i = 0; i < editor.document.lineCount; ++ i)
+		{
+			let line = editor.document.lineAt(i);
+			let c = line.text.indexOf(sign);
+			if (c != -1)
+			{
+				c += sign.length;
+				await editor.edit(editBuilder => {
+					var range = new vscode.Range(i, c, i, line.text.length);
+					editBuilder.replace(range, tex2);
+				});
+				break;
+			}
+		}
 	}
 	
-	function work_last()
+	async function work_last()
 	{
 		let editor = vscode.window.activeTextEditor;
 		if (!editor)
@@ -155,44 +155,49 @@ function activate(context) {
 		//let te = t;
 		
 		let te = text.length;
+		let t = te;
 		
 		let huan = "";
 		if (text[te - 1] == '\n')
+		{
 			-- te;
-		else huan = '\n';
-		while (text[te - 1] != '\n' && text.length - te <= wordcount) -- te;
+			-- t;
+			huan = '\n';
+		}
+		while (text[t - 1] != '\n' && te - t <= wordcount) -- t;
 		
-		let tex1 = text.substring(0, te);
+		let tex1 = text.substring(0, t);
 		
-		let tex2 = text.substring(te);
+		let tex2 = text.substring(t, te);
 		
 		fs.writeFileSync(txtfile3, fs.readFileSync(txtfile2, 'utf8') + fs.readFileSync(txtfile3, 'utf8'), (err) => {});
-		fs.writeFileSync(txtfile2, tex2, (err) => {});
+		fs.writeFileSync(txtfile2, tex2 + huan, (err) => {});
 		fs.writeFileSync(txtfile1, tex1, (err) => {});
 		
 		//let code = fs.readFileSync(codefile, 'utf8');
-		let code = editor.document.getText();
-		let c = code.indexOf(sign);
-		if (c == -1)
+		
+		if (editor.document.getText().indexOf(sign) == -1)
 		{
-			code = sign + "\n" + code;
-			c = 0;
+			await editor.edit(editBuilder => {
+				const begin = new vscode.Position(0, 0);
+				editBuilder.insert(begin, sign + "\n");
+			});
 		}
-		c += sign.length;
-		let ce = c;
-		while (ce < code.length && code[ce] != '\n') ++ ce;
-		if (ce < code.length) ++ ce;
 		
-		code = code.substring(0, c) + tex2 + huan + code.substring(ce);
-		
-		//fs.writeFile(codefile, code, (err) => {});
-		editor.edit(editBuilder => {
-			const begin = new vscode.Position(0, 0);
-			const end = new vscode.Position(vscode.window.activeTextEditor.document.lineCount + 1, 0);
-			const all = new vscode.Range(begin, end);
-			editBuilder.delete(all);
-			editBuilder.insert(begin, code);
-		});
+		for (let i = 0; i < editor.document.lineCount; ++ i)
+		{
+			let line = editor.document.lineAt(i);
+			let c = line.text.indexOf(sign);
+			if (c != -1)
+			{
+				c += sign.length;
+				await editor.edit(editBuilder => {
+					var range = new vscode.Range(i, c, i, line.text.length);
+					editBuilder.replace(range, tex2);
+				});
+				break;
+			}
+		}
 	}
 	
 	function f_init()

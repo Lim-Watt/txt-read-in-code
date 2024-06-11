@@ -78,7 +78,29 @@ function activate(context) {
 		}
 		//const codefile = vscode.window.activeTextEditor.document.fileName;
 		const wordcount = vscode.workspace.getConfiguration().get("txt-read-in-code.WordCount");
-		const sign = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");
+		const lang = editor.document.languageId;
+		const Sign = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");
+		
+		if (typeof Sign != "object")
+		{
+			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			return;
+		}
+		
+		if (typeof Sign[lang] == "object" && typeof Sign[lang].a == "string")
+		{
+			var sign = Sign[lang].a;
+		}
+		else if (typeof Sign["default"] == "object" && typeof Sign["default"].a == "string")
+		{
+			var sign = Sign["default"].a;
+		}
+		else
+		{
+			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			return;
+		}
+		
 		let text=fs.readFileSync(txtfile3, 'utf8');
 		//let t = text.indexOf(tgs)
 		
@@ -86,6 +108,7 @@ function activate(context) {
 		//t = t + tgs.length;
 		if (text.length == 0)
 		{
+			vscode.window.showWarningMessage(`读完了呢。`);
 			return;
 		}
 		//let te = t;

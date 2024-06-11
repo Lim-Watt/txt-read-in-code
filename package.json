@@ -3,7 +3,7 @@
 	"publisher": "ElectronicElementsStudio",
 	"displayName": "TXT Read in Code",
 	"description": "Allows you to read TXT in a code environment.",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"
@@ -56,8 +56,23 @@
 			"title": "TXT Read in Code",
 			"properties": {
 				"txt-read-in-code.Sign": {
-					"type": "string",
-					"default": "/// ",
+					"type": "object",
+					"default": {
+						"cpp": {
+							"a": "/// ",
+							"b": {
+								"pre" : "/*> ",
+								"suf" : " <*/"
+							}
+						},
+						"default": {
+							"a": "/// ",
+							"b": {
+								"pre" : "/*> ",
+								"suf" : " <*/"
+							}
+						}
+					},
 					"description": "设置阅读标识符"
 				},
 				"txt-read-in-code.WordCount": {

@@ -112,7 +112,7 @@ function activate(context) {
 		if (editor.document.getText().indexOf(sign) == -1)
 		{
 			await editor.edit(editBuilder => {
-				const begin = new vscode.Position(0, 0);
+				const begin = new vscode.Position(editor.selection.active.line, 0);
 				editBuilder.insert(begin, sign + "\n");
 			});
 		}
@@ -179,7 +179,7 @@ function activate(context) {
 		if (editor.document.getText().indexOf(sign) == -1)
 		{
 			await editor.edit(editBuilder => {
-				const begin = new vscode.Position(0, 0);
+				const begin = new vscode.Position(editor.selection.active.line, 0);
 				editBuilder.insert(begin, sign + "\n");
 			});
 		}

@@ -1,4 +1,7 @@
 # txt-read-in-code 项目介绍
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 这是一个能帮助你在代码中嵌入 `txt` 文件内容的插件。
 
@@ -112,6 +115,20 @@ i
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://limit-bed.com"><img src="https://avatars.githubusercontent.com/u/150017579?v=4?s=100" width="100px;" alt="Lim Watt"/><br /><sub><b>Lim Watt</b></sub></a><br /><a href="#maintenance-Lim-Watt" title="Maintenance">🚧</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 

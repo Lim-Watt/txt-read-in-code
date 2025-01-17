@@ -33,9 +33,9 @@ Not for work, let's goof off.
 - **用于区分**的符号是为了避免它与其他注释冲突。
 - **空格**是为了美观。（雾
 
-### 最多显示字数
+### 最多单行显示字数
 
-可以在插件设置 `txt-read-in-code.WordCount` 中设置最多显示字数，默认为 20。
+可以在插件设置 `txt-read-in-code.WordsLimit` 中设置最多单行显示字数，默认为 20。
 
 ---
 

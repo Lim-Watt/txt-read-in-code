@@ -1,6 +1,6 @@
 # txt-read-in-code 项目介绍
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 这是一个能帮助你在代码中嵌入 `txt` 文件内容的插件。
@@ -121,6 +121,7 @@ i
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://limit-bed.com"><img src="https://avatars.githubusercontent.com/u/150017579?v=4?s=100" width="100px;" alt="Lim Watt"/><br /><sub><b>Lim Watt</b></sub></a><br /><a href="#maintenance-Lim-Watt" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tsxc-github"><img src="https://avatars.githubusercontent.com/u/94750616?v=4?s=100" width="100px;" alt="Tang Shenxincan"/><br /><sub><b>Tang Shenxincan</b></sub></a><br /><a href="#maintenance-tsxc-github" title="Maintenance">🚧</a></td>
     </tr>
   </tbody>
 </table>

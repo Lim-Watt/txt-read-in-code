@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "Lim-Watt",
+      "name": "Lim Watt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/150017579?v=4",
+      "profile": "http://limit-bed.com",
+      "contributions": [
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "txt-read-in-code",
+  "projectOwner": "artitsy"
+}

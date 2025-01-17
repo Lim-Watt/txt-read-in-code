@@ -85,7 +85,8 @@
 	},
 	"scripts": {
 		"check": "eslint .",
-		"build": "tsc&&vsce package",
+		"build": "tsc||vsce package",
+		"buildpre": "tsc||vsce package --pre-release",
 		"compile": "tsc"
 	},
 	"devDependencies": {

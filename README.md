@@ -108,3 +108,14 @@ i
 
 如果你觉得这个项目不错，不妨给个 `star` 吧。
 如果你发现不足，欢迎反馈！
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->

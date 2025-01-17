@@ -4,6 +4,11 @@ const fs = require('fs');
 const vscode = require('vscode');
 
 function activate(context) {
+	// 极端错误处理
+	if (EXTREME_ERROR) {
+		vscode.window.showErrorMessage('程序遭遇极端错误，请联系开发者，如需重新启动，请禁用并重新启用本插件');
+		return;
+	}
 
 	// 设置缓存文件
 	const txtfolder: string = context.globalStorageUri.fsPath + '/';// 缓存根目录
@@ -231,7 +236,7 @@ function ReadConfig(): ConfigType {
 		return;
 	}
 	//const codefile = vscode.window.activeTextEditor.document.fileName;
-	const wordslinit: number = vscode.workspace.getConfiguration().get("txt-read-in-code.WordsLimit");// 每行最大字数
+	const wordslimit: number = vscode.workspace.getConfiguration().get("txt-read-in-code.WordsLimit");// 每行最大字数
 	const lang = editor.document.languageId;// 语言 ID
 	const Sign: object = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");// 标志符
 
@@ -242,8 +247,10 @@ function ReadConfig(): ConfigType {
 			ThrowError(ERROR_SIGN_SETTING);
 		}
 		if (typeof Sign[lang] == "object" && typeof Sign[lang].a == "string") {
+			sign = Sign[lang].a;
 		}
 		else if (typeof Sign["default"] == "object" && typeof Sign["default"].a == "string") {
+			sign = Sign["default"].a;
 		}
 		else {
 			ThrowError(ERROR_SIGN_SETTING);
@@ -252,7 +259,7 @@ function ReadConfig(): ConfigType {
 
 	let config: ConfigType = {
 		editor: editor,
-		wordslimit: wordslinit,
+		wordslimit: wordslimit,
 		lang: lang,
 		sign: sign
 	}
@@ -265,7 +272,7 @@ function ReadConfig(): ConfigType {
 // 检测配置文件
 function CheckConfig(config: ConfigType): boolean {
 	// 检查WordsLimit
-	if ((config.wordslimit > 0 || config.wordslimit < 200) == false) {
+	if ((config.wordslimit > 0) == false) {
 		ThrowError(ERROR_WORDSLIMIT);
 		return false;
 	}
@@ -285,26 +292,38 @@ function ThrowError(err: ErrorType): void {
 	switch (err) {
 		case ERROR_UNKOWN:
 			vscode.window.showErrorMessage(`未知错误(ﾟДﾟ*)ﾉ，请联系开发者`);
-			ERRORExit(err);
+			ExtremeErrorExitAndDeactive(err);
 			break;
 		case ERROR_SIGN_SETTING:
 			vscode.window.showErrorMessage(`请检查标志符设定╰（‵□′）╯`);
+			ErrorExit(err);
+			break;
+		case ERROR_WORDSLIMIT:
+			vscode.window.showErrorMessage(`请检查每行最大字数设定（￣︶￣）↗`);
+			ErrorExit(err);
 			break;
 		case ERROR_IMPOSSIBLE:
 			vscode.window.showErrorMessage(`不可能的错误(╯‵□′)╯︵┻━┻，你这代码有问题啊，快去嘲笑开发者。`);
-			ERRORExit(err);
+			ExtremeErrorExitAndDeactive(err);
 			break;
 		default:
 			vscode.window.showErrorMessage(`未正确处理的错误😂，请联系开发者。`);
-			ERRORExit(err);
+			ExtremeErrorExitAndDeactive(err);
 			break;
 	}
 	ThrowError(ERROR_IMPOSSIBLE);
 }
 
 // 因错误强制退出
-function ERRORExit(err: ErrorType): never {
-	process.exit(err);
+function ErrorExit(err: ErrorType): never {
+	throw new Error(`Error: ${err}`);
+}
+// 极端错误强制退出并不再被激活
+var EXTREME_ERROR: boolean = false;
+function ExtremeErrorExitAndDeactive(err: ErrorType): never {
+	EXTREME_ERROR = true
+	deactivate();
+	throw new Error(`Error: ${err}`);
 }
 
 // This method is called when your extension is deactivated

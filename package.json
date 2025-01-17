@@ -75,10 +75,10 @@
 					},
 					"description": "设置阅读标识符"
 				},
-				"txt-read-in-code.WordCount": {
+				"txt-read-in-code.WordsLimit": {
 					"type": "number",
 					"default": 20,
-					"description": "设置最多显示字数"
+					"description": "设置最多单行显示字数"
 				}
 			}
 		}

@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "tsxc-github",
+      "name": "Tang Shenxincan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/94750616?v=4",
+      "profile": "https://github.com/tsxc-github",
+      "contributions": [
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "txt-read-in-code",
+  "projectOwner": "artitsy"
+}

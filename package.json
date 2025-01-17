@@ -61,15 +61,15 @@
 						"cpp": {
 							"a": "/// ",
 							"b": {
-								"pre" : "/*> ",
-								"suf" : " <*/"
+								"pre": "/*> ",
+								"suf": " <*/"
 							}
 						},
 						"default": {
 							"a": "/// ",
 							"b": {
-								"pre" : "/*> ",
-								"suf" : " <*/"
+								"pre": "/*> ",
+								"suf": " <*/"
 							}
 						}
 					},
@@ -86,15 +86,16 @@
 	"scripts": {
 		"lint": "eslint .",
 		"pretest": "npm run lint",
-		"test": "vscode-test"
+		"test": "vscode-test",
+		"build": "vsce package"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.86.0",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "18.x",
-		"eslint": "^8.56.0",
-		"typescript": "^5.3.3",
+		"@types/vscode": "^1.86.0",
 		"@vscode/test-cli": "^0.0.4",
-		"@vscode/test-electron": "^2.3.9"
+		"@vscode/test-electron": "^2.3.9",
+		"eslint": "^8.56.0",
+		"typescript": "^5.3.3"
 	}
 }

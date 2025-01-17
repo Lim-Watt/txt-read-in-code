@@ -3,7 +3,7 @@
 	"publisher": "ElectronicElementsStudio",
 	"displayName": "TXT Read in Code",
 	"description": "Allows you to read TXT in a code environment.",
-	"version": "1.5.1",
+	"version": "1.6.0",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"
@@ -18,7 +18,7 @@
 	"activationEvents": [
 		"onCommand"
 	],
-	"main": "./extension.js",
+	"main": "/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -61,40 +61,44 @@
 						"cpp": {
 							"a": "/// ",
 							"b": {
-								"pre" : "/*> ",
-								"suf" : " <*/"
+								"pre": "/*> ",
+								"suf": " <*/"
 							}
 						},
 						"default": {
 							"a": "/// ",
 							"b": {
-								"pre" : "/*> ",
-								"suf" : " <*/"
+								"pre": "/*> ",
+								"suf": " <*/"
 							}
 						}
 					},
 					"description": "设置阅读标识符"
 				},
-				"txt-read-in-code.WordCount": {
+				"txt-read-in-code.WordsLimit": {
 					"type": "number",
 					"default": 20,
-					"description": "设置最多显示字数"
+					"description": "设置最多单行显示字数"
 				}
 			}
 		}
 	},
 	"scripts": {
-		"lint": "eslint .",
-		"pretest": "npm run lint",
-		"test": "vscode-test"
+		"check": "eslint .",
+		"build": "tsc&&vsce package",
+		"compile": "tsc"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.86.0",
+		"@eslint/js": "^9.18.0",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "18.x",
-		"eslint": "^8.56.0",
-		"typescript": "^5.3.3",
+		"@types/vscode": "^1.86.0",
 		"@vscode/test-cli": "^0.0.4",
-		"@vscode/test-electron": "^2.3.9"
+		"@vscode/test-electron": "^2.3.9",
+		"eslint": "^8.57.1",
+		"eslint-plugin-vue": "^9.32.0",
+		"globals": "^15.14.0",
+		"typescript": "^5.3.3",
+		"typescript-eslint": "^8.20.0"
 	}
 }

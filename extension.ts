@@ -2,33 +2,29 @@ const vscode = require('vscode');
 const fs = require('fs');
 
 function activate(context) {
-	/** 缓存根目录 */
-	const txtfolder = context.globalStorageUri.fsPath + '/';
-	/** 已读 */
-	const txtfile1 = txtfolder + "txtfile1";
-	/** 在读 */
-	const txtfile2 = txtfolder + "txtfile2";
-	/** 未读 */
-	const txtfile3 = txtfolder + "txtfile3";
+
+	// 设置缓存文件
+	const txtfolder = context.globalStorageUri.fsPath + '/';// 缓存根目录
+	const txtfile1 = txtfolder + "txtfile1";// 已读
+	const txtfile2 = txtfolder + "txtfile2";// 在读
+	const txtfile3 = txtfolder + "txtfile3";// 未读
+
 	// 保证父目录存在
-	!function ()
-	{
-		fs.access(txtfolder, (err) => {
-			if (err)
+	fs.access(txtfolder, (err) => {
+		if (err)
+		{
+			fs.mkdirSync(txtfolder);
+		}
+		else
+		{
+			var tempstats = fs.statSync(txtfolder);
+			if (!(tempstats.isDirectory()))
 			{
+				fs.unlinkSync(txtfolder);
 				fs.mkdirSync(txtfolder);
 			}
-			else
-			{
-				var tempstats = fs.statSync(txtfolder);
-				if (!(tempstats.isDirectory()))
-				{
-					fs.unlinkSync(txtfolder);
-					fs.mkdirSync(txtfolder);
-				}
-			}
-		})
-	}()
+		}
+	})
 	
 	function work_init() {
 		vscode.window.showOpenDialog(
@@ -71,19 +67,22 @@ function activate(context) {
 	
 	async function work_next()
 	{
+		
+		// 读取配置文件
 		let editor = vscode.window.activeTextEditor;
 		if (!editor)
 		{
 			return;
 		}
 		//const codefile = vscode.window.activeTextEditor.document.fileName;
-		const wordcount = vscode.workspace.getConfiguration().get("txt-read-in-code.WordCount");
-		const lang = editor.document.languageId;
-		const Sign = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");
+		const wordcount = vscode.workspace.getConfiguration().get("txt-read-in-code.WordCount");// 每行最大字数
+		const lang = editor.document.languageId;// 语言 ID
+		const Sign = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");// 标志符
 		
+		// 检查配置文件
 		if (typeof Sign != "object")
 		{
-			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			ThrowError(ERROR_SIGN_SETTING);
 			return;
 		}
 		
@@ -97,7 +96,7 @@ function activate(context) {
 		}
 		else
 		{
-			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			ThrowError(ERROR_SIGN_SETTING);
 			return;
 		}
 		
@@ -108,7 +107,7 @@ function activate(context) {
 		//t = t + tgs.length;
 		if (text.length == 0)
 		{
-			vscode.window.showWarningMessage(`读完了呢。`);
+			vscode.window.showInformationMessage(`读完了呢。`);
 			return;
 		}
 		//let te = t;
@@ -170,13 +169,13 @@ function activate(context) {
 		
 		if (typeof Sign != "object")
 		{
-			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			ThrowError(ERROR_SIGN_SETTING);
 			return;
 		}
 		
 		if (typeof Sign[lang] == "object" && typeof Sign[lang].a == "string")
 		{
-			var sign = Sign[lang].a;
+			let sign: string = Sign[lang].a;
 		}
 		else if (typeof Sign["default"] == "object" && typeof Sign["default"].a == "string")
 		{
@@ -184,7 +183,7 @@ function activate(context) {
 		}
 		else
 		{
-			vscode.window.showErrorMessageage(`您的设置有很严重的问题。`);
+			ThrowError(ERROR_SIGN_SETTING);
 			return;
 		}
 		
@@ -195,7 +194,7 @@ function activate(context) {
 		//t = t + tgs.length;
 		if (text.length == 0)
 		{
-			vscode.window.showWarningMessage(`到头了呢。`);
+			vscode.window.showInformationMessage(`到头了呢。`);
 			return;
 		}
 		//let te = t;
@@ -279,14 +278,25 @@ function activate(context) {
 		});
 	}
 	
+	// 注册命令
 	let disposable1 = vscode.commands.registerCommand('txt-read-in-code.init', f_init);
 	context.subscriptions.push(disposable1);
-	
 	let disposable2 = vscode.commands.registerCommand('txt-read-in-code.next', f_next);
 	context.subscriptions.push(disposable2);
-	
 	let disposable3 = vscode.commands.registerCommand('txt-read-in-code.last', f_last);
 	context.subscriptions.push(disposable3);
+}
+
+// 错误集中处理
+const ERROR_SIGN_SETTING = 1;
+function ThrowError(err){
+	switch (err){
+		case ERROR_SIGN_SETTING:
+			vscode.window.showErrorMessage(`请检查标志符设定╰（‵□′）╯`);
+			break;
+		default:
+			vscode.window.showErrorMessage(`未正确处理的错误😂，请联系开发者。`);
+	}
 }
 
 // This method is called when your extension is deactivated

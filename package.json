@@ -18,7 +18,7 @@
 	"activationEvents": [
 		"onCommand"
 	],
-	"main": "./extension.js",
+	"main": "/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -84,18 +84,20 @@
 		}
 	},
 	"scripts": {
-		"lint": "eslint .",
-		"pretest": "npm run lint",
-		"test": "vscode-test",
-		"build": "vsce package"
+		"check": "eslint .",
+		"build": "tsc&&vsce package",
+		"compile": "tsc"
 	},
 	"devDependencies": {
+		"@eslint/js": "^9.18.0",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "18.x",
 		"@types/vscode": "^1.86.0",
 		"@vscode/test-cli": "^0.0.4",
 		"@vscode/test-electron": "^2.3.9",
-		"eslint": "^8.56.0",
+		"eslint": "^8.57.1",
+		"eslint-plugin-vue": "^9.32.0",
+		"globals": "^15.14.0",
 		"typescript": "^5.3.3"
 	}
 }

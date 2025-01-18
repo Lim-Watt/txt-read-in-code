@@ -1,6 +1,6 @@
 {
 	"name": "txt-read-in-code",
-	"publisher": "ElectronicElementsStudio",
+	"publisher": "Artitsy",
 	"displayName": "TXT Read in Code",
 	"description": "Allows you to read TXT in a code environment.",
 	"version": "1.6.0",
@@ -101,5 +101,9 @@
 		"globals": "^15.14.0",
 		"typescript": "^5.3.3",
 		"typescript-eslint": "^8.20.0"
+	},
+	"dependencies": {
+		"@types/chardet": "^1.0.0",
+		"chardet": "^2.0.0"
 	}
 }

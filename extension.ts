@@ -1,9 +1,19 @@
-// import * as fs from 'fs';
-// import * as vscode from 'vscode';
+//import * as fs from 'fs';
+//import * as vscode from 'vscode';
+//import * as chardet from 'chardet';
+// @ts-ignore
 const fs = require('fs');
 const vscode = require('vscode');
+const chardet = require('chardet');
 
-function activate(context) {
+interface TxtFiles {
+	txtfolder: string;
+	txtfile1: string;
+	txtfile2: string;
+	txtfile3: string;
+}
+
+function activate(context: vscode.ExtensionContext): void {
 	// 极端错误处理
 	if (EXTREME_ERROR) {
 		vscode.window.showErrorMessage('程序遭遇极端错误，请联系开发者，如需重新启动，请禁用并重新启用本插件');
@@ -11,55 +21,62 @@ function activate(context) {
 	}
 
 	// 设置缓存文件
-	const txtfolder: string = context.globalStorageUri.fsPath + '/';// 缓存根目录
-	const txtfile1: string = txtfolder + "txtfile1";// 已读
-	const txtfile2: string = txtfolder + "txtfile2";// 在读
-	const txtfile3: string = txtfolder + "txtfile3";// 未读
+	const txtfolder: string = context.globalStorageUri.fsPath + '/'; // 缓存根目录
+	const txtfile1: string = txtfolder + "txtfile1"; // 已读
+	const txtfile2: string = txtfolder + "txtfile2"; // 在读
+	const txtfile3: string = txtfolder + "txtfile3"; // 未读
+
 
 	// 保证父目录存在
-	fs.access(txtfolder, (err) => {
+	fs.access(txtfolder, (err: NodeJS.ErrnoException | null) => {
 		if (err) {
 			fs.mkdirSync(txtfolder);
-		}
-		else {
+		} else {
 			let tempstats = fs.statSync(txtfolder);
-			if (!(tempstats.isDirectory())) {
+			if (!tempstats.isDirectory()) {
 				fs.unlinkSync(txtfolder);
 				fs.mkdirSync(txtfolder);
 			}
 		}
-	})
+	});
 
-	function work_init() {
-		vscode.window.showOpenDialog(
-			{
-				canSelectFiles: true,
-				canSelectMany: false,
-				filters:
-				{
-					'Text': ['txt', 'in', 'out', 'ans'],
-					'Code': ['c', 'cpp', 'py', 'java', 'go', 'cs', 'rs', 'php', 'html', 'css', 'js', 'json', 'xml', 'sh', 'bat', 'lua', 'sql', 'md', 'conf', 'log', 'gitignore', 'gitattributes']
-				},
-				openLabel: '选择'
-			}
-		).then((uri) => {
+	function work_init(): void {
+		vscode.window.showOpenDialog({
+			canSelectFiles: true,
+			canSelectMany: false,
+			filters: {
+				'Text': ['txt', 'in', 'out', 'ans'],
+				'Code': ['c', 'cpp', 'py', 'java', 'go', 'cs', 'rs', 'php', 'html', 'css', 'js', 'json', 'xml', 'sh', 'bat', 'lua', 'sql', 'md', 'conf', 'log', 'gitignore', 'gitattributes']
+			},
+			openLabel: '选择'
+		}).then((uri: vscode.Uri[] | undefined) => {
 			if (uri && uri[0]) {
-				const frmfile = uri[0].fsPath;
-				fs.access(frmfile, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+				const frmfile: string = uri[0].fsPath;
+				fs.access(frmfile, fs.constants.F_OK | fs.constants.W_OK, (err: NodeJS.ErrnoException | null) => {
 					if (err) {
 						vscode.window.showErrorMessage('文件不存在或不可读！');
-						console.error(
-							`${frmfile} ${err.code === 'ENOENT' ? '不存在' : '只可读'}`);
-					}
-					else {
-						let text: string = fs.readFileSync(frmfile, 'utf8');
+						console.error(`${frmfile} ${err.code === 'ENOENT' ? '不存在' : '只可读'}`);
+					} else {
+						let buffer: Buffer = fs.readFileSync(frmfile);
+						
+						let encoding: string = chardet.detect(buffer) || 'utf8';
+						
+						// Check for binary file
+						for (let i = 0; i < buffer.length; i++) {
+							if (buffer[i] === 0) {
+								vscode.window.showErrorMessage('二进制文件不支持！');
+								throw new Error('Binary file detected');
+							}
+						}
+						
+						let text: string = buffer.toString(encoding as BufferEncoding);
 						text = "\n" + text.replaceAll("\r", "\n") + "\n";
-						text = ((((((((((text.replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n")).replaceAll("\n\n", "\n"));
+						text = text.replace(/\n\n+/g, "\n");
 						text = text.substring(1) + "-- END --\n";
 						fs.writeFile(txtfile1, "\n", (err) => { });
 						fs.writeFile(txtfile2, "", (err) => { });
 						fs.writeFile(txtfile3, text, (err) => { });
-
+						
 						vscode.window.showInformationMessage('读取执行完毕');
 					}
 				});
@@ -67,39 +84,33 @@ function activate(context) {
 		});
 	}
 
-	async function work_next() {
+	async function work_next(): Promise<void> {
 		let config: ConfigType = ReadConfig();
 
-		let text = fs.readFileSync(txtfile3, 'utf8');
-		//let t = text.indexOf(tgs)
-
-		//let tex1 = text.substring(0, t);
-		//t = t + tgs.length;
-		if (text.length == 0) {
+		let text: string = fs.readFileSync(txtfile3, 'utf8');
+		if (text.length === 0) {
 			vscode.window.showInformationMessage(`读完了呢。`);
 			return;
 		}
-		//let te = t;
-		let te = 0;
-		let huan = "";
-		while (text[te] != '\n' && te <= config.wordslimit) ++te;
 
-		let tex2 = text.substring(0, te);
+		let te: number = 0;
+		let huan: string = "";
+		while (text[te] !== '\n' && te <= config.wordslimit) ++te;
 
-		if (text[te] == '\n') {
+		let tex2: string = text.substring(0, te);
+
+		if (text[te] === '\n') {
 			huan = '\n';
 			++te;
 		}
 
-		let tex3 = text.substring(te);
+		let tex3: string = text.substring(te);
 
 		fs.appendFileSync(txtfile1, fs.readFileSync(txtfile2, 'utf8'));
 		fs.writeFileSync(txtfile2, tex2 + huan);
 		fs.writeFileSync(txtfile3, tex3);
 
-		//let code = fs.readFileSync(codefile, 'utf8');
-
-		if (config.editor.document.getText().indexOf(config.sign) == -1) {
+		if (config.editor.document.getText().indexOf(config.sign) === -1) {
 			await config.editor.edit(editBuilder => {
 				const begin = new vscode.Position(config.editor.selection.active.line, 0);
 				editBuilder.insert(begin, config.sign + "\n");
@@ -107,12 +118,12 @@ function activate(context) {
 		}
 
 		for (let i = 0; i < config.editor.document.lineCount; ++i) {
-			let line = config.editor.document.lineAt(i);
-			let c = line.text.indexOf(config.sign);
-			if (c != -1) {
+			let line: vscode.TextLine = config.editor.document.lineAt(i);
+			let c: number = line.text.indexOf(config.sign);
+			if (c !== -1) {
 				c += config.sign.length;
 				await config.editor.edit(editBuilder => {
-					let range = new vscode.Range(i, c, i, line.text.length);
+					let range: vscode.Range = new vscode.Range(i, c, i, line.text.length);
 					editBuilder.replace(range, tex2);
 				});
 				break;
@@ -120,42 +131,34 @@ function activate(context) {
 		}
 	}
 
-	async function work_last() {
+	async function work_last(): Promise<void> {
 		let config: ConfigType = ReadConfig();
 
-		let text = fs.readFileSync(txtfile1, 'utf8');
-		//let t = text.indexOf(tgs)
-
-		//let tex1 = text.substring(0, t);
-		//t = t + tgs.length;
-		if (text.length == 0) {
+		let text: string = fs.readFileSync(txtfile1, 'utf8');
+		if (text.length === 0) {
 			vscode.window.showInformationMessage(`到头了呢。`);
 			return;
 		}
-		//let te = t;
 
-		let te = text.length;
-		let t = te;
+		let te: number = text.length;
+		let t: number = te;
 
-		let huan = "";
-		if (text[te - 1] == '\n') {
+		let huan: string = "";
+		if (text[te - 1] === '\n') {
 			--te;
 			--t;
 			huan = '\n';
 		}
-		while (text[t - 1] != '\n' && te - t <= config.wordslimit) --t;
+		while (text[t - 1] !== '\n' && te - t <= config.wordslimit) --t;
 
-		let tex1 = text.substring(0, t);
-
-		let tex2 = text.substring(t, te);
+		let tex1: string = text.substring(0, t);
+		let tex2: string = text.substring(t, te);
 
 		fs.writeFileSync(txtfile3, fs.readFileSync(txtfile2, 'utf8') + fs.readFileSync(txtfile3, 'utf8'));
 		fs.writeFileSync(txtfile2, tex2 + huan);
 		fs.writeFileSync(txtfile1, tex1);
 
-		//let code = fs.readFileSync(codefile, 'utf8');
-
-		if (config.editor.document.getText().indexOf(config.sign) == -1) {
+		if (config.editor.document.getText().indexOf(config.sign) === -1) {
 			await config.editor.edit(editBuilder => {
 				const begin = new vscode.Position(config.editor.selection.active.line, 0);
 				editBuilder.insert(begin, config.sign + "\n");
@@ -163,12 +166,12 @@ function activate(context) {
 		}
 
 		for (let i = 0; i < config.editor.document.lineCount; ++i) {
-			let line = config.editor.document.lineAt(i);
-			let c = line.text.indexOf(config.sign);
-			if (c != -1) {
+			let line: vscode.TextLine = config.editor.document.lineAt(i);
+			let c: number = line.text.indexOf(config.sign);
+			if (c !== -1) {
 				c += config.sign.length;
 				await config.editor.edit(editBuilder => {
-					let range = new vscode.Range(i, c, i, line.text.length);
+					let range: vscode.Range = new vscode.Range(i, c, i, line.text.length);
 					editBuilder.replace(range, tex2);
 				});
 				break;
@@ -176,38 +179,36 @@ function activate(context) {
 		}
 	}
 
-	function f_init() {
+	function f_init(): void {
 		work_init();
 	}
 
-	function f_next() {
-		fs.access(txtfile1, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+	function f_next(): void {
+		fs.access(txtfile1, fs.constants.F_OK | fs.constants.W_OK, (err: NodeJS.ErrnoException | null) => {
 			if (err) {
 				work_init();
-			}
-			else {
+			} else {
 				work_next();
 			}
 		});
 	}
 
-	function f_last() {
-		fs.access(txtfile1, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+	function f_last(): void {
+		fs.access(txtfile1, fs.constants.F_OK | fs.constants.W_OK, (err: NodeJS.ErrnoException | null) => {
 			if (err) {
 				work_init();
-			}
-			else {
+			} else {
 				work_last();
 			}
 		});
 	}
 
 	// 注册命令
-	let disposable1 = vscode.commands.registerCommand('txt-read-in-code.init', f_init);
+	let disposable1: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.init', f_init);
 	context.subscriptions.push(disposable1);
-	let disposable2 = vscode.commands.registerCommand('txt-read-in-code.next', f_next);
+	let disposable2: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.next', f_next);
 	context.subscriptions.push(disposable2);
-	let disposable3 = vscode.commands.registerCommand('txt-read-in-code.last', f_last);
+	let disposable3: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.last', f_last);
 	context.subscriptions.push(disposable3);
 }
 

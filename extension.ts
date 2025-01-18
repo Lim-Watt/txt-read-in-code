@@ -1,10 +1,10 @@
-//import * as fs from 'fs';
-//import * as vscode from 'vscode';
-//import * as chardet from 'chardet';
-// @ts-ignore
-const fs = require('fs');
-const vscode = require('vscode');
-const chardet = require('chardet');
+import * as fs from 'fs';
+import * as vscode from 'vscode';
+import * as chardet from 'chardet';
+import * as iconv from 'iconv-lite';
+//const fs = require('fs');
+//const vscode = require('vscode');
+//const chardet = require('chardet');
 
 interface TxtFiles {
 	txtfolder: string;
@@ -69,7 +69,13 @@ function activate(context: vscode.ExtensionContext): void {
 							}
 						}
 						
-						let text: string = buffer.toString(encoding as BufferEncoding);
+						let text: string;
+						if (encoding.toLowerCase() !== 'utf-8') {
+							text = iconv.decode(buffer, encoding);
+						} else {
+							text = buffer.toString('utf8');
+						}
+						
 						text = "\n" + text.replaceAll("\r", "\n") + "\n";
 						text = text.replace(/\n\n+/g, "\n");
 						text = text.substring(1) + "-- END --\n";

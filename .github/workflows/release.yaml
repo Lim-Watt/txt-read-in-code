@@ -92,8 +92,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: txt-read-in-code-${{ env.EXT_VERSION }}.vsix
-          path: ./txt-read-in-code-${{ env.EXT_VERSION }}.vsix
+          name: txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix
+          path: ./txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix
 
       - name: restore old package.json
         run: mv package.json.real package.json
@@ -113,13 +113,13 @@ jobs:
               prerelease: false
             });
 
-            const path = "./txt-read-in-code-${{ env.EXT_VERSION }}.vsix";
+            const path = "./txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix";
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: release.data.id,
               data: fs.readFileSync(path),
-              name: "txt-read-in-code-${{ env.EXT_VERSION }}.vsix",
+              name: "txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix",
               headers: {
                 "content-type": "application/vsix",
                 "content-length": fs.statSync(path).size
@@ -128,24 +128,23 @@ jobs:
 
             core.summary.addLink(`Release v${{ env.EXT_VERSION }}`, release.data.html_url);
             await core.summary.write();
+  publish:
+      environment: publish
 
-#   publish:
-#     environment: publish
+      needs: release
 
-#     needs: release
+      runs-on: ubuntu-latest
+      permissions: {}
 
-#     runs-on: ubuntu-latest
-#     permissions: {}
+      steps:
+        - uses: actions/download-artifact@v4
+          with:
+            name: txt-read-in-code-comments-${{ needs.release.outputs.version }}.vsix
 
-#     steps:
-#       - uses: actions/download-artifact@v4
-#         with:
-#           name: txt-read-in-code-${{ needs.release.outputs.version }}.vsix
-
-#       - name: Publish to marketplace
-#         # https://github.com/HaaLeo/publish-vscode-extension/releases/tag/v1.2.0
-#         uses: HaaLeo/publish-vscode-extension@c1a0486c5a3eed24e8c21d4e37889a7c4c60c443
-#         with:
-#           pat: ${{ secrets.PUBLISHER_KEY }}
-#           registryUrl: https://marketplace.visualstudio.com
-#           extensionFile: ./txt-read-in-code-${{ needs.release.outputs.version }}.vsix
+        - name: Publish to marketplace
+          # https://github.com/HaaLeo/publish-vscode-extension/releases/tag/v1.2.0
+          uses: HaaLeo/publish-vscode-extension@c1a0486c5a3eed24e8c21d4e37889a7c4c60c443
+          with:
+            pat: ${{ secrets.PUBLISHER_KEY }}
+            registryUrl: https://marketplace.visualstudio.com
+            extensionFile: ./txt-read-in-code-comments-${{ needs.release.outputs.version }}.vsix

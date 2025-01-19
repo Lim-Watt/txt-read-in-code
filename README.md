@@ -39,7 +39,7 @@
 
 ### 最多单行显示字数
 
-可以在插件设置 `txt-read-in-code.WordsLimit` 中设置最多单行显示字数，默认为 20。
+可以在插件设置 `txt-read-in-code-comments.WordsLimit` 中设置最多单行显示字数，默认为 20。
 
 ---
 
@@ -119,7 +119,7 @@
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://limit-bed.com"><img src="https://avatars.githubusercontent.com/u/150017579?v=4?s=100" width="100px;" alt="Lim Watt"/><br /><sub><b>Lim Watt</b></sub></a><br /><a href="#maintenance-Lim-Watt" title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tsxc-github"><img src="https://avatars.githubusercontent.com/u/94750616?v=4?s=100" width="100px;" alt="星澜曦光"/><br /><sub><b>星澜曦光</b></sub></a><br /><a href="#maintenance-tsxc-github" title="Maintenance">🚧</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://allcontributors.org"><img src="https://avatars.githubusercontent.com/u/46410174?v=4?s=100" width="100px;" alt="All Contributors"/><br /><sub><b>All Contributors</b></sub></a><br /><a href="https://github.com/artitsy/txt-read-in-code/commits?author=all-contributors" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://allcontributors.org"><img src="https://avatars.githubusercontent.com/u/46410174?v=4?s=100" width="100px;" alt="All Contributors"/><br /><sub><b>All Contributors</b></sub></a><br /><a href="https://github.com/artitsy/txt-read-in-code-comments/commits?author=all-contributors" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>

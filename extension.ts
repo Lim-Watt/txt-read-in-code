@@ -210,11 +210,11 @@ function activate(context: vscode.ExtensionContext): void {
 	}
 
 	// 注册命令
-	let disposable1: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.init', f_init);
+	let disposable1: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.init', f_init);
 	context.subscriptions.push(disposable1);
-	let disposable2: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.next', f_next);
+	let disposable2: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.next', f_next);
 	context.subscriptions.push(disposable2);
-	let disposable3: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code.last', f_last);
+	let disposable3: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.last', f_last);
 	context.subscriptions.push(disposable3);
 }
 
@@ -244,9 +244,9 @@ function ReadConfig(): ConfigType {
 		return;
 	}
 	//const codefile = vscode.window.activeTextEditor.document.fileName;
-	const wordslimit: number = vscode.workspace.getConfiguration().get("txt-read-in-code.WordsLimit");// 每行最大字数
+	const wordslimit: number = vscode.workspace.getConfiguration().get("txt-read-in-code-comments.WordsLimit");// 每行最大字数
 	const lang = editor.document.languageId;// 语言 ID
-	const Sign: object = vscode.workspace.getConfiguration().get("txt-read-in-code.Sign");// 标志符
+	const Sign: object = vscode.workspace.getConfiguration().get("txt-read-in-code-comments.Sign");// 标志符
 
 	// 临时代码-TO-BE-MODIFIED
 	let sign: string;

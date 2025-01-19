@@ -3,7 +3,7 @@
 	"publisher": "artitsy",
 	"displayName": "TXT Read in Code Comments",
 	"description": "Allows you to read TXT in code comments.",
-	"version": "1.7.2",
+	"version": "1.7.3",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"
@@ -53,7 +53,7 @@
 			}
 		],
 		"configuration": {
-			"title": "TXT Read in Code",
+			"title": "TXT Read in Code Comments",
 			"properties": {
 				"txt-read-in-code-comments.Sign": {
 					"type": "object",

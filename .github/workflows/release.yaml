@@ -113,7 +113,7 @@ jobs:
               prerelease: false
             });
 
-            const path = "./txt-read-in-code-comments"-${{ env.EXT_VERSION }}.vsix";
+            const path = "./txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix";
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,

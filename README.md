@@ -1,11 +1,12 @@
-# txt-read-in-code 项目介绍
+# txt read in code comments 项目介绍
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-这是一个能帮助你在代码中嵌入 `txt` 文件内容的插件。
+这是一个能帮助你在代码注释中嵌入文本内容的插件。
 
-Not for work, let's goof off.
+> Not for work, let's goof off.
 
 ![](https://cdn.ipfsscan.io/weibo/large/008D5oyhly1hndslmi4lhg30hs0cv4qu.gif)
 
@@ -19,14 +20,14 @@ Not for work, let's goof off.
 
 ## 设置
 
-`Ctrl + ,` 打开设置，搜索 `txt-read-in-code.`，开始自定义。
+`Ctrl + ,` 打开设置，搜索 `txt-read-in-code-comments.`，开始自定义。
 
 ### 阅读标识符
 
-可以在插件设置 `txt-read-in-code.Sign` 中设置阅读标识符，默认为 `/// `（三个斜杠+一个空格）。
+可以在插件设置 `txt-read-in-code-comments.Sign` 中设置阅读标识符，默认为 `/// `（三个斜杠+一个空格）。
 
 按语言自定义：
-1. 不确定语言id可以==单击==状态栏右侧的语言（如 `c++`），语言id是括号里那个（如 `cpp`）。
+1. 不确定语言id可以 __单击__ 状态栏右侧的语言（如 `c++`），语言id是括号里那个（如 `cpp`）。
 1. `default` 为失配设置。
 1. "a" 指单行注释，"b" 指多行注释（多行注释暂未实现）。
 
@@ -61,7 +62,7 @@ Not for work, let's goof off.
 选取文件：
 
 ![](https://cdn.ipfsscan.io/weibo/large/008D5oyhly1hnvegis01cj30q30etwhz.jpg)
-i
+
 ### 第 三 步 开始阅读
 
 调用插件 `read.next` 命令或使用 `Alt+right` 或 `Alt+d` 快捷键，插件会自动读取下一句并放到代码中第一个阅读标识符的后面。
@@ -88,10 +89,6 @@ i
 
 1. 显然，若第一个阅读标识符后有内容，会先清除原内容再插入。
 
-1. 不会有人的编码格式不是 `UTF-8` 吧。
-
-1. 不会有人用非等宽字体或全角字母吧。
-
 ## 更多
 
 ### 正在解决的问题或正在实现的功能
@@ -102,7 +99,7 @@ i
 - [x] 支持在未保存的编辑器中阅读
 - [x] 解决高频率翻页导致数据冲突崩溃
 - [x] 精确修改（避免全量刷新
-- [ ] 更多编码支持
+- [X] 更多编码支持
 - [ ] 更多阅读方法
   - [ ] 阅读范围标识符 （类似与 c++ 的 `/* */`）
   

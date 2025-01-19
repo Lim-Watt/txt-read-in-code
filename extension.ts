@@ -65,7 +65,7 @@ function activate(context: vscode.ExtensionContext): void {
 						for (let i = 0; i < buffer.length; i++) {
 							if (buffer[i] === 0) {
 								vscode.window.showErrorMessage('二进制文件不支持！');
-								throw new Error('Binary file detected');
+								return;
 							}
 						}
 						

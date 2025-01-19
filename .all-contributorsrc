@@ -39,6 +39,6 @@
   "skipCi": true,
   "repoType": "github",
   "repoHost": "https://github.com",
-  "projectName": "txt-read-in-code",
+  "projectName": "txt-read-in-code-comments",
   "projectOwner": "artitsy"
 }

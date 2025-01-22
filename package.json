@@ -3,7 +3,7 @@
 	"publisher": "artitsy",
 	"displayName": "TXT Read in Code Comments",
 	"description": "Allows you to read TXT in code comments.",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"
@@ -32,6 +32,10 @@
 			{
 				"command": "txt-read-in-code-comments.last",
 				"title": "read.last"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"title": "read.hide"
 			}
 		],
 		"keybindings": [
@@ -50,6 +54,14 @@
 			{
 				"command": "txt-read-in-code-comments.last",
 				"key": "Alt+a"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"key": "Alt+s"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"key": "Alt+down"
 			}
 		],
 		"configuration": {

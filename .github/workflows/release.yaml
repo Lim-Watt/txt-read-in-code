@@ -110,7 +110,8 @@ jobs:
               tag_name: "release-v${{ env.EXT_VERSION }}",
               name: "v${{ env.EXT_VERSION }}",
               draft: false,
-              prerelease: false
+              prerelease: false,
+              body: "[CHANGELOG](https://github.com/artitsy/txt-read-in-code-comments/blob/main/CHANGELOG.md)"
             });
 
             const path = "./txt-read-in-code-comments-${{ env.EXT_VERSION }}.vsix";

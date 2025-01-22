@@ -3,7 +3,7 @@
 	"publisher": "artitsy",
 	"displayName": "TXT Read in Code Comments",
 	"description": "Allows you to read TXT in code comments.",
-	"version": "1.7.3",
+	"version": "2.0.0",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"
@@ -87,7 +87,7 @@
 		"check": "eslint .",
 		"build": "npm run compile&&vsce package",
 		"buildpre": "npm run compile&&vsce package --pre-release",
-		"compile": "tsc --skipLibCheck"
+		"compile": "tsc"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",

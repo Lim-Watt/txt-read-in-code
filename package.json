@@ -3,7 +3,7 @@
 	"publisher": "artitsy",
 	"displayName": "TXT Read in Code Comments",
 	"description": "Allows you to read TXT in code comments.",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.86.0"

@@ -32,6 +32,10 @@
 			{
 				"command": "txt-read-in-code-comments.last",
 				"title": "read.last"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"title": "read.hide"
 			}
 		],
 		"keybindings": [
@@ -50,6 +54,14 @@
 			{
 				"command": "txt-read-in-code-comments.last",
 				"key": "Alt+a"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"key": "Alt+s"
+			},
+			{
+				"command": "txt-read-in-code-comments.hide",
+				"key": "Alt+down"
 			}
 		],
 		"configuration": {

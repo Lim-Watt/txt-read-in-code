@@ -113,6 +113,7 @@ function activate(context: vscode.ExtensionContext): void {
 		});
 	}
 
+	var text: string="";
 	// 从缓存读取所需内容
 	function read(): string {
 		let config: ConfigType = ReadConfig();
@@ -141,12 +142,14 @@ function activate(context: vscode.ExtensionContext): void {
 		// 处理换行符
 		const newlineIndex = readText.indexOf('\n');// 寻找换行符
 
-		let text: string;
+		
+
+		// 是否存在换行符
 		if (newlineIndex !== -1) {
-			// 存在换行符
 			text = readText.slice(0, newlineIndex);
 			position += newlineIndex + 1;
-		} else {
+		}
+		else {
 			text = readText;
 			position += length;
 		}
@@ -155,7 +158,7 @@ function activate(context: vscode.ExtensionContext): void {
 	}
 
 	// 向工作区写入
-	function write() {
+	function write(text: string = read()) {
 		let config: ConfigType = ReadConfig();
 		// 如果不存在标志符
 		if (config.editor.document.getText().indexOf(config.sign) === -1) {
@@ -176,7 +179,7 @@ function activate(context: vscode.ExtensionContext): void {
 				indexPosition += config.sign.length;
 				config.editor.edit(editBuilder => {
 					let range: vscode.Range = new vscode.Range(lineNumber, indexPosition, lineNumber, textOfThisLine.text.length);
-					editBuilder.replace(range, read());
+					editBuilder.replace(range, text);
 				});
 				break;
 			}
@@ -209,10 +212,10 @@ function activate(context: vscode.ExtensionContext): void {
 
 	}
 
-	function f_init() {
+	function f_init(): void {
 		WorkInit();
 	}
-	function f_next() {
+	function f_next(): void {
 		CheckCache();
 		WorkNext();
 	}
@@ -221,13 +224,23 @@ function activate(context: vscode.ExtensionContext): void {
 		WorkLast();
 	}
 
+	// 老板键
+	var hide: boolean = false
+	function f_hide(): void {
+		if (hide === false) {
+			write("");
+			hide=true;
+		} else {
+			hide = false;
+			write(text);
+		}
+	}
+
 	// 注册命令
-	let disposable1: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.init', f_init);
-	context.subscriptions.push(disposable1);
-	let disposable2: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.next', f_next);
-	context.subscriptions.push(disposable2);
-	let disposable3: vscode.Disposable = vscode.commands.registerCommand('txt-read-in-code-comments.last', f_last);
-	context.subscriptions.push(disposable3);
+	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.init', f_init));
+	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.next', f_next));
+	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.last', f_last));
+	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.hide', f_hide));
 }
 
 // 判断是否在编辑器中
@@ -256,7 +269,7 @@ function ReadConfig(): ConfigType {
 		return;
 	}
 	const wordslimit: number = vscode.workspace.getConfiguration().get("txt-read-in-code-comments.WordsLimit");// 每行最大字数
-	const lang = editor.document.languageId;// 语言 ID
+	const lang: string = editor.document.languageId;// 语言 ID
 	const Sign: object = vscode.workspace.getConfiguration().get("txt-read-in-code-comments.Sign");// 标志符
 
 	// 临时代码-TO-BE-MODIFIED
@@ -347,6 +360,7 @@ function ExtremeErrorExitAndDeactive(err: ErrorType): never {
 
 // This method is called when your extension is deactivated
 function deactivate() {
+	// 保存临时配置文件
 	let jsonData: object = { position }
 	fse.writeJSONSync(JSONFile, jsonData);
 }

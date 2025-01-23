@@ -32,6 +32,7 @@ function activate(context: vscode.ExtensionContext): void {
 		if (err) {
 			fse.mkdirSync(cacheFolder);
 		} else {
+			// TO-DO
 			let tempstats = fse.statSync(cacheFolder);
 			if (!tempstats.isDirectory()) {
 				fse.unlinkSync(cacheFolder);
@@ -51,6 +52,7 @@ function activate(context: vscode.ExtensionContext): void {
 			openLabel: '选择'
 		}).then((uri: vscode.Uri[] | undefined) => {
 			if (uri && uri[0]) {
+				// TO-DO
 				const frmfile: string = uri[0].fsPath;
 				try {
 					fse.accessSync(frmfile);
@@ -230,6 +232,33 @@ function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.next', f_next));
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.last', f_last));
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.hide', f_hide));
+	
+	// 检查配置版本
+	let ConfigVersionTag: number = context.globalState.get("ConfigVersionTag", 1);
+	if (ConfigVersionTag < 2) {
+		try {
+			fse.accessSync(cacheFolder + "txtfile1", fse.constants.F_OK | fse.constants.W_OK);
+		} catch {
+			ConfigVersionTag = 0;
+			WorkInit();
+		}
+		if (ConfigVersionTag === 1) {
+			let text1 = fse.readFileSync(cacheFolder + "txtfile1", 'utf8') + fse.readFileSync(cacheFolder + "txtfile2", 'utf8');
+			let text2 = fse.readFileSync(cacheFolder + "txtfile3", 'utf8');
+			
+			let text: string = text1 + text2;
+			
+			Buffer.from(text, 'binary')
+			fse.writeFileSync(cacheFile, iconv.encode(text, 'utf32le'));
+
+			position = text1.length;
+			context.globalState.update("position", position);
+			readingFile = fse.openSync(cacheFile, 'r');
+			
+			vscode.window.showInformationMessage('配置版本更新完成: 1 -> 2');
+		}
+		context.globalState.update("ConfigVersionTag", 2);
+	}
 }
 
 // 判断是否在编辑器中

@@ -101,8 +101,6 @@ function activate(context: vscode.ExtensionContext): void {
 				text = text.substring(1) + "-- END --\n";
 
 				Buffer.from(text, 'binary')
-				// fs.writeFile(txtfile1, "\n", (err) => { });
-				// fs.writeFile(txtfile2, "", (err) => { });
 				fse.writeFileSync(cacheFile, iconv.encode(text, 'utf32le'));
 
 				// 初始化指针为0
@@ -115,7 +113,7 @@ function activate(context: vscode.ExtensionContext): void {
 
 	var text: string="";
 	// 从缓存读取所需内容
-	function read(): string {
+	function Read(): string {
 		let config: ConfigType = ReadConfig();
 
 		// 检查文件是否读取完/读到头
@@ -158,7 +156,7 @@ function activate(context: vscode.ExtensionContext): void {
 	}
 
 	// 向工作区写入
-	function write(text: string = read()) {
+	function Write(text: string = Read()) {
 		let config: ConfigType = ReadConfig();
 		// 如果不存在标志符
 		if (config.editor.document.getText().indexOf(config.sign) === -1) {
@@ -188,14 +186,14 @@ function activate(context: vscode.ExtensionContext): void {
 
 	// 显示下一句
 	async function WorkNext(): Promise<void> {
-		write();
+		Write();
 	}
 
 	//显示上一句
 	async function WorkLast(): Promise<void> {
 		let config = ReadConfig();
 		position -= config.wordslimit * 2;
-		write();
+		Write();
 	}
 
 	function CheckCache(): void {
@@ -228,11 +226,11 @@ function activate(context: vscode.ExtensionContext): void {
 	var hide: boolean = false
 	function f_hide(): void {
 		if (hide === false) {
-			write("");
+			Write("");
 			hide=true;
 		} else {
 			hide = false;
-			write(text);
+			Write(text);
 		}
 	}
 

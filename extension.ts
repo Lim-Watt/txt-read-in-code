@@ -41,6 +41,8 @@ function activate(context: vscode.ExtensionContext): void {
 	if (position === undefined)
 		position = fse.readJSONSync(JSONFile).position;
 
+	hide = false;
+
 
 	// 保证父目录存在
 	try {
@@ -111,7 +113,7 @@ function activate(context: vscode.ExtensionContext): void {
 		});
 	}
 
-	var text: string="";
+	var text: string = "";
 	// 从缓存读取所需内容
 	function Read(): string {
 		let config: ConfigType = ReadConfig();
@@ -140,7 +142,7 @@ function activate(context: vscode.ExtensionContext): void {
 		// 处理换行符
 		const newlineIndex = readText.indexOf('\n');// 寻找换行符
 
-		
+
 
 		// 是否存在换行符
 		if (newlineIndex !== -1) {
@@ -211,13 +213,16 @@ function activate(context: vscode.ExtensionContext): void {
 	}
 
 	function f_init(): void {
+		hide = false;
 		WorkInit();
 	}
 	function f_next(): void {
+		hide = false;
 		CheckCache();
 		WorkNext();
 	}
 	function f_last(): void {
+		hide = false;
 		CheckCache();
 		WorkLast();
 	}
@@ -227,7 +232,7 @@ function activate(context: vscode.ExtensionContext): void {
 	function f_hide(): void {
 		if (hide === false) {
 			Write("");
-			hide=true;
+			hide = true;
 		} else {
 			hide = false;
 			Write(text);

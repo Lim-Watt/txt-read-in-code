@@ -58,10 +58,6 @@
 			{
 				"command": "txt-read-in-code-comments.hide",
 				"key": "Alt+s"
-			},
-			{
-				"command": "txt-read-in-code-comments.hide",
-				"key": "Alt+down"
 			}
 		],
 		"configuration": {

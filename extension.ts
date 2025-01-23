@@ -6,17 +6,10 @@ import * as iconv from 'iconv-lite';
 //const vscode = require('vscode');
 //const chardet = require('chardet');
 
-interface TxtFiles {
-	txtfolder: string;
-	txtfile1: string;
-	txtfile2: string;
-	txtfile3: string;
-}
-
 var cacheFolder: string; // 缓存根目录
 var cacheFile: string; // 缓存
-var JSONFile: string;
-var position: number
+var position: number;
+var readingFile: number; // 句柄
 
 function activate(context: vscode.ExtensionContext): void {
 	// 极端错误处理
@@ -28,20 +21,10 @@ function activate(context: vscode.ExtensionContext): void {
 	// 设置缓存文件
 	cacheFolder = context.globalStorageUri.fsPath + '/'; // 缓存根目录
 	cacheFile = cacheFolder + "cacheFile"; // 缓存
-	JSONFile = cacheFolder + "JSONFile";
 
 	// 读取position
-	try {
-		fse.accessSync(JSONFile);
-	} catch (err) {
-		if (err) {
-			position = 0;
-		}
-	}
-	if (position === undefined)
-		position = fse.readJSONSync(JSONFile).position;
-
-
+	position = context.globalState.get("position", 0);
+	
 	// 保证父目录存在
 	try {
 		fse.accessSync(cacheFolder);
@@ -49,6 +32,7 @@ function activate(context: vscode.ExtensionContext): void {
 		if (err) {
 			fse.mkdirSync(cacheFolder);
 		} else {
+			// TO-DO
 			let tempstats = fse.statSync(cacheFolder);
 			if (!tempstats.isDirectory()) {
 				fse.unlinkSync(cacheFolder);
@@ -68,6 +52,7 @@ function activate(context: vscode.ExtensionContext): void {
 			openLabel: '选择'
 		}).then((uri: vscode.Uri[] | undefined) => {
 			if (uri && uri[0]) {
+				// TO-DO
 				const frmfile: string = uri[0].fsPath;
 				try {
 					fse.accessSync(frmfile);
@@ -98,14 +83,16 @@ function activate(context: vscode.ExtensionContext): void {
 
 				text = "\n" + text.replaceAll("\r", "\n") + "\n";
 				text = text.replace(/\n\n+/g, "\n");
-				text = text.substring(1) + "-- END --\n";
+				text = text.substring(1);
 
 				Buffer.from(text, 'binary')
 				fse.writeFileSync(cacheFile, iconv.encode(text, 'utf32le'));
 
 				// 初始化指针为0
 				position = 0;
-
+				context.globalState.update("position", position);
+				readingFile = fse.openSync(cacheFile, 'r');
+				
 				vscode.window.showInformationMessage('读取执行完毕');
 			}
 		});
@@ -114,45 +101,48 @@ function activate(context: vscode.ExtensionContext): void {
 	var text: string="";
 	// 从缓存读取所需内容
 	function Read(): string {
-		let config: ConfigType = ReadConfig();
-
-		// 检查文件是否读取完/读到头
-		const stats: fse.Stats = fse.statSync(cacheFile);
-		if (position >= stats.size / 4) {
-			position = stats.size;
-			vscode.window.showInformationMessage(`读完了呢。`);
-			return "";
+		if (readingFile === undefined) {
+			readingFile = fse.openSync(cacheFile, 'r');
 		}
-		if (position < 0) {
-			position = 0;
-			vscode.window.showInformationMessage(`到头了呢。`);
-			return "";
+		try {
+			let config: ConfigType = ReadConfig();
+
+			// 检查文件是否读取完/读到头
+			const stats: fse.Stats = fse.statSync(cacheFile);
+			if (position >= stats.size / 4) {
+				position = stats.size / 4;
+				vscode.window.showInformationMessage(`读完了呢。`);
+				return "-- END --";
+			}
+			if (position < 0) {
+				position = 0;
+				vscode.window.showInformationMessage(`到头了呢。`);
+				return "-- BEGIN --";
+			}
+
+
+			let length = Math.min(config.wordslimit + 1, stats.size / 4 - position);// 计算需要读取长度
+			let buffer = Buffer.alloc(length * 4, 0);
+			length = fse.readSync(readingFile, buffer, 0, length * 4, position * 4) / 4;
+
+			let readText: string = iconv.decode(buffer, 'utf32le');
+
+			// 处理换行符
+			const newlineIndex = readText.indexOf('\n');// 寻找换行符
+			
+			// 是否存在换行符
+			if (newlineIndex !== -1) {
+				text = readText.slice(0, newlineIndex);
+				position += newlineIndex + 1;
+			} else {
+				text = readText.slice(0, length - 1);
+				position += length - 1;
+			}
+
+			return text;
+		} finally {
+			context.globalState.update("position", position);
 		}
-
-		const readingFile: number = fse.openSync(cacheFile, 'r');
-
-		let length = Math.min(config.wordslimit, stats.size - position);// 计算需要读取长度
-		let buffer = Buffer.alloc(length * 4, 0);
-		length = fse.readSync(readingFile, buffer, 0, length * 4, position * 4) / 4;
-
-		let readText: string = iconv.decode(buffer, 'utf32le');
-
-		// 处理换行符
-		const newlineIndex = readText.indexOf('\n');// 寻找换行符
-
-		
-
-		// 是否存在换行符
-		if (newlineIndex !== -1) {
-			text = readText.slice(0, newlineIndex);
-			position += newlineIndex + 1;
-		}
-		else {
-			text = readText;
-			position += length;
-		}
-
-		return text;
 	}
 
 	// 向工作区写入
@@ -163,7 +153,10 @@ function activate(context: vscode.ExtensionContext): void {
 			config.editor.edit(editBuilder => {
 				const begin = new vscode.Position(config.editor.selection.active.line, 0);
 				editBuilder.insert(begin, config.sign + "\n");
+			}).then(() => {
+				Write(text);
 			});
+			return;
 		}
 
 		for (let lineNumber = 0; lineNumber < config.editor.document.lineCount; ++lineNumber) {
@@ -239,6 +232,33 @@ function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.next', f_next));
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.last', f_last));
 	context.subscriptions.push(vscode.commands.registerCommand('txt-read-in-code-comments.hide', f_hide));
+	
+	// 检查配置版本
+	let ConfigVersionTag: number = context.globalState.get("ConfigVersionTag", 1);
+	if (ConfigVersionTag < 2) {
+		try {
+			fse.accessSync(cacheFolder + "txtfile1", fse.constants.F_OK | fse.constants.W_OK);
+		} catch {
+			ConfigVersionTag = 0;
+			WorkInit();
+		}
+		if (ConfigVersionTag === 1) {
+			let text1 = fse.readFileSync(cacheFolder + "txtfile1", 'utf8') + fse.readFileSync(cacheFolder + "txtfile2", 'utf8');
+			let text2 = fse.readFileSync(cacheFolder + "txtfile3", 'utf8');
+			
+			let text: string = text1 + text2;
+			
+			Buffer.from(text, 'binary')
+			fse.writeFileSync(cacheFile, iconv.encode(text, 'utf32le'));
+
+			position = text1.length;
+			context.globalState.update("position", position);
+			readingFile = fse.openSync(cacheFile, 'r');
+			
+			vscode.window.showInformationMessage('配置版本更新完成: 1 -> 2');
+		}
+		context.globalState.update("ConfigVersionTag", 2);
+	}
 }
 
 // 判断是否在编辑器中
@@ -356,11 +376,7 @@ function ExtremeErrorExitAndDeactive(err: ErrorType): never {
 }
 
 // This method is called when your extension is deactivated
-function deactivate() {
-	// 保存临时配置文件
-	let jsonData: object = { position }
-	fse.writeJSONSync(JSONFile, jsonData);
-}
+function deactivate() { }
 
 module.exports = {
 	activate,

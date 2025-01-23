@@ -254,7 +254,6 @@ function InEditor(): boolean {
 
 // 读取配置文件
 type ConfigType = {
-	// @ts-ignore
 	editor: vscode.TextEditor,
 	wordslimit: number,
 	lang: string,

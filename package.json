@@ -103,20 +103,22 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
+		"@types/chardet": "^1.0.0",
 		"@types/fs-extra": "^11.0.4",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "18.x",
 		"@types/vscode": "^1.86.0",
-		"@types/chardet": "^1.0.0",
 		"@vscode/test-cli": "^0.0.4",
 		"@vscode/test-electron": "^2.3.9",
 		"eslint": "^8.57.1",
 		"eslint-plugin-vue": "^9.32.0",
 		"globals": "^15.14.0",
 		"typescript": "^5.3.3",
-		"typescript-eslint": "^8.20.0"
+		"typescript-eslint": "^8.20.0",
+		"vscode": "^1.1.37"
 	},
 	"dependencies": {
+		"chardet": "^2.0.0",
 		"fs-extra": "^11.3.0",
 		"iconv-lite": "^0.6.3"
 	}
